@@ -1,6 +1,6 @@
 TODO
 -------------------
-1. More work to be done on Timezone, Timezone offsets and DST (Summer Time)
+1. DST (Summer Time)
 
 2. Add .getFriendly() to TimeSpan and TimePeriod. Example
 

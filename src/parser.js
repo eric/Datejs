@@ -499,6 +499,11 @@
                 this.second = Number(s); 
             }; 
         },
+        millisecond: function (s) {
+            return function () {
+                this.millisecond = Number(s);
+            };
+        },
         meridian: function (s) { 
             return function () { 
                 this.meridian = s.slice(0, 1).toLowerCase(); 
@@ -508,7 +513,12 @@
             return function () {
                 var n = s.replace(/[^\d\+\-]/g, "");
                 if (n.length) { 
-                    this.timezoneOffset = Number(n); 
+                    // parse offset into iso8601 parts
+                    var zp = n.match(/(\+|-)(\d{2})(\d{2})?/);
+                    // minute offsets must be converted to base of 100
+                    var mo = parseInt((parseInt(zp[3]) || 0) / .6).toString();
+                    mo = mo.length < 2 ? "0" + mo : mo;
+                    this.timezoneOffset = zp[1] + zp[2] + mo;
                 } else { 
                     this.timezone = s.toLowerCase(); 
                 }
@@ -590,6 +600,10 @@
                 this.second = 0;
             }
 
+            if(!this.millisecond) {
+                this.millisecond = 0;
+            }
+
             if (this.meridian && this.hour) {
                 if (this.meridian == "p" && this.hour < 12) {
                     this.hour = this.hour + 12;
@@ -602,12 +616,12 @@
                 throw new RangeError(this.day + " is not a valid value for days.");
             }
 
-            var r = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
+            var r = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second, this.millisecond);
 
-            if (this.timezone) { 
-                r.set({ timezone: this.timezone }); 
-            } else if (this.timezoneOffset) { 
-                r.set({ timezoneOffset: this.timezoneOffset }); 
+            if (this.timezone) {
+                r.set({ timezone: this.timezone });
+            } else if (this.timezoneOffset) {
+                r.setTimezoneOffset(this.timezoneOffset);
             }
             
             return r;
@@ -739,7 +753,7 @@
             if (!this.orient && !this.operator && this.unit == "week" && this.value && !this.day && !this.month) {
                 return Date.today().setWeek(this.value);
             }
-            
+
             today.set(this);
 
             if (this.bias) {
@@ -805,13 +819,13 @@
     g.mm = _.cache(_.process(_.rtoken(/^[0-5][0-9]/), t.minute));
     g.s = _.cache(_.process(_.rtoken(/^([0-5][0-9]|[0-9])/), t.second));
     g.ss = _.cache(_.process(_.rtoken(/^[0-5][0-9]/), t.second));
+    g.fff = _.cache(_.process(_.rtoken(/^[0-9]{3}(?!\d)/), t.millisecond));
     g.hms = _.cache(_.sequence([g.H, g.m, g.s], g.timePartDelimiter));
   
     // _.min(1, _.set([ g.H, g.m, g.s ], g._t));
     g.t = _.cache(_.process(g.ctoken2("shortMeridian"), t.meridian));
     g.tt = _.cache(_.process(g.ctoken2("longMeridian"), t.meridian));
-    g.z = _.cache(_.process(_.rtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/), t.timezone));
-    g.zz = _.cache(_.process(_.rtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/), t.timezone));
+    g.z = _.cache(_.process(_.rtoken(/^(Z|z)|((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d(\:?\d\d)?)/), t.timezone));
     
     g.zzz = _.cache(_.process(g.ctoken2("timezone"), t.timezone));
     g.timeSuffix = _.each(_.ignore(g.whiteSpace), _.set([ g.tt, g.zzz ]));
@@ -897,7 +911,7 @@
         _.any(
         // translate format specifiers into grammar rules
         _.process(
-        _.rtoken(/^(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|zz?z?)/), 
+        _.rtoken(/^(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|fff|tt?|zz?z?)/),
         function (fmt) { 
         if (g[fmt]) { 
             return g[fmt]; 
@@ -908,7 +922,7 @@
     ),
     // translate separator tokens into token rules
     _.process(
-    _.rtoken(/^[^dMyhHmstz]+/), // all legal separators 
+    _.rtoken(/^[^dMyhHmsftz]+/), // all legal separators
         function (s) { 
             return _.ignore(_.stoken(s)); 
         } 
@@ -951,11 +965,11 @@
 
 	// check for these formats first
     g._formats = g.formats([
-        "\"yyyy-MM-ddTHH:mm:ssZ\"",
-        "yyyy-MM-ddTHH:mm:ssZ",
+        "\"yyyy-MM-ddTHH:mm:ss.fffz\"",
+        "yyyy-MM-ddTHH:mm:ss.fffz",
+        "yyyy-MM-ddTHH:mm:ss.fff",
         "yyyy-MM-ddTHH:mm:ssz",
         "yyyy-MM-ddTHH:mm:ss",
-        "yyyy-MM-ddTHH:mmZ",
         "yyyy-MM-ddTHH:mmz",
         "yyyy-MM-ddTHH:mm",
         "ddd, MMM dd, yyyy H:mm:ss tt",

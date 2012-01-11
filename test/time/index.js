@@ -1,4 +1,4 @@
-﻿Date.Specification = new Specification({
+Date.Specification = new Specification({
   'Times': {
     setup: function() {
       this.baseline = []; 
@@ -234,18 +234,25 @@
 'With Timezones': {
     setup: function() { 
       this.d = [];
-      this.d[0] = Date.today().set({hour: 22, minute: 30 }).setTimezoneOffset(-500);
-      this.d[1] = Date.today().set({hour: 22 }).setTimezoneOffset(-500);
+      this.d[0] = Date.today().set({hour: 22, minute: 30 }).setTimezoneOffset("-0000");
     },
-    '10:30 PM EST': {
-      run: function() { this.date = Date.parse('10:30 PM EST') },
+    '05:30 PM EST': {
+      run: function() { this.date = Date.parse('05:30 PM EST') },
       assert: function() { return this.d[0].equals( this.date ) }
     },
-    '10:30 PM -0500 : Offset': {
-      run: function() { this.date = Date.parse('10:30 PM -0500') },
+    '04:30 PM CST': {
+      run: function() { this.date = Date.parse('04:30 PM CST') },
+      assert: function() { return this.d[0].equals( this.date ) }
+    },
+    '05:30 PM -0500 : Offset': {
+      run: function() { this.date = Date.parse('05:30 PM -0500') },
+      assert: function() { return this.d[0].equals( this.date ) }
+    },
+    '11:30 PM +0100 : Offset': {
+      run: function() { this.date = Date.parse('11:30 PM +0100') },
       assert: function() { return this.d[0].equals( this.date ) }
     }
-  } ,
+  },
   
 'Misc': {
     setup: function() { 

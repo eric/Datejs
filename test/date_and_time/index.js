@@ -1,4 +1,4 @@
-﻿Date.Specification = new Specification({
+Date.Specification = new Specification({
   'Overview': {
     setup: function() {
       this.d = [];
@@ -701,9 +701,17 @@
         run: function() { },
         assert: function() { return new Date(1997,6,16,19,20,30).setTimezoneOffset('+0100').equals( Date.parseExact('1997-07-16T19:20:30+01:00', "yyyy-MM-ddTHH:mm:ssz") ) }
       },
+       '1997-07-16T19:20:30.045+01:00 : "YYYY-MM-DDThh:mm:ss.fffTZD"': {
+        run: function() { },
+        assert: function() { return new Date(1997,6,16,19,20,30,45).setTimezoneOffset('+0100').equals( Date.parse('1997-07-16T19:20:30.045+01:00') ) }
+      },
+       '1997-07-16T19:20:30.045+01:00 : "YYYY-MM-DDThh:mm:ss.fffTZD" : parseExact': {
+        run: function() { },
+        assert: function() { return new Date(1997,6,16,19,20,30,45).setTimezoneOffset('+0100').equals( Date.parseExact('1997-07-16T19:20:30.045+01:00', "yyyy-MM-ddTHH:mm:ss.fffz") ) }
+      },
   },
   'Fail': {
-     '1997-07-16T19:20:30.45+01:00 : "YYYY-MM-DDThh:mm:ss.sTZD"': {
+     '1997-07-16T19:20:30.45+01:00 : "YYYY-MM-DDThh:mm:ss.ffTZD"': {
       run: function() { },
       assert: function() { return new Date(1997,6,16,19,20,30,45).setTimezoneOffset('+0100').equals( Date.parse('1997-07-16T19:20:30.45+01:00') ) }
     }
@@ -729,11 +737,19 @@
       },
       '1985-04-12T23:20:50Z': {
         run: function() { },
-        assert: function() { return new Date(1985,3,12,23,20,50).equals( Date.parse('1985-04-12T23:20:50Z') ) }
-      },  
-      'Much faster with Date.parseExact("1985-04-12T23:20:50Z", "yyyy-MM-ddTHH:mm:ssZ")': {
+        assert: function() { return new Date(1985,3,12,23,20,50).setTimezone("Z").equals( Date.parse('1985-04-12T23:20:50Z') ) }
+      },
+      '1985-04-12T23:20:50.045': {
         run: function() { },
-        assert: function() { return new Date(1985,3,12,23,20,50).equals( Date.parseExact('1985-04-12T23:20:50Z', "yyyy-MM-ddTHH:mm:ssZ") ) }
+        assert: function() { return new Date(1985,3,12,23,20,50,45).equals( Date.parse('1985-04-12T23:20:50.045') ) }
+      },
+      '1985-04-12T23:20:50.045Z': {
+        run: function() { },
+        assert: function() { return new Date(1985,3,12,23,20,50,45).setTimezone("Z").equals( Date.parse('1985-04-12T23:20:50.045Z') ) }
+      },  
+      'Much faster with Date.parseExact("1985-04-12T23:20:50.045Z", "yyyy-MM-ddTHH:mm:ss.fffz")': {
+        run: function() { },
+        assert: function() { return new Date(1985,3,12,23,20,50,45).setTimezone("Z").equals( Date.parseExact('1985-04-12T23:20:50.045Z', "yyyy-MM-ddTHH:mm:ss.fffz") ) }
       }         
 
   }      
