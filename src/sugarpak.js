@@ -446,7 +446,7 @@
         $P[de] = $P[de + "s"] = ef(px[k]);
         
         // Create date element functions and plural date element functions used with Number (eg. day(), days(), months()).
-        $N[de] = $N[de + "s"] = nf(de);
+        $N[de] = $N[de + "s"] = nf(de+"s");
     }
     
     $P._ss = ef("Second");
