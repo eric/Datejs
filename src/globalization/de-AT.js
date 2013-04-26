@@ -1,4 +1,7 @@
-Date.CultureInfo = {
+if ( !Date.AvailableCultureInfo )
+        Date.AvailableCultureInfo = {};
+
+Date.AvailableCultureInfo["de-AT"] = {
 	/* Culture Name */
     name: "de-AT",
     englishName: "German (Austria)",
@@ -193,3 +196,5 @@ Date.CultureInfo = {
  * long                long
  * short               short
  */
+if ( !Date.CultureInfo )
+    Date.CultureInfo = Date.AvailableCultureInfo["de-AT"];

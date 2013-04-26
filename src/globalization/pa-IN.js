@@ -1,4 +1,7 @@
-Date.CultureInfo = {
+if ( !Date.AvailableCultureInfo )
+        Date.AvailableCultureInfo = {};
+
+Date.AvailableCultureInfo["pa-IN"] = {
 	/* Culture Name */
     name: "pa-IN",
     englishName: "Punjabi (India)",
@@ -193,3 +196,5 @@ Date.CultureInfo = {
  * long                long
  * short               short
  */
+if ( !Date.CultureInfo )
+    Date.CultureInfo = Date.AvailableCultureInfo["pa-IN"];

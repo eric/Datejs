@@ -1,4 +1,7 @@
-Date.CultureInfo = {
+if ( !Date.AvailableCultureInfo )
+        Date.AvailableCultureInfo = {};
+
+Date.AvailableCultureInfo["tt-RU"] = {
 	/* Culture Name */
     name: "tt-RU",
     englishName: "Tatar (Russia)",
@@ -193,3 +196,5 @@ Date.CultureInfo = {
  * long                long
  * short               short
  */
+if ( !Date.CultureInfo )
+    Date.CultureInfo = Date.AvailableCultureInfo["tt-RU"];

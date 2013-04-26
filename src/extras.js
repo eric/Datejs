@@ -10,7 +10,6 @@
 (function () {
     var $D = Date, 
         $P = $D.prototype, 
-        $C = $D.CultureInfo,
         $f = [],
         p = function (s, l) {
             if (!l) {

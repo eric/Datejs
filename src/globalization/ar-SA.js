@@ -1,4 +1,7 @@
-Date.CultureInfo = {
+if ( !Date.AvailableCultureInfo )
+        Date.AvailableCultureInfo = {};
+
+Date.AvailableCultureInfo["ar-SA"] = {
 	/* Culture Name */
     name: "ar-SA",
     englishName: "Arabic (Saudi Arabia)",
@@ -193,3 +196,5 @@ Date.CultureInfo = {
  * long                long
  * short               short
  */
+if ( !Date.CultureInfo )
+    Date.CultureInfo = Date.AvailableCultureInfo["ar-SA"];

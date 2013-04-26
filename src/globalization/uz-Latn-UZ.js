@@ -1,4 +1,7 @@
-Date.CultureInfo = {
+if ( !Date.AvailableCultureInfo )
+        Date.AvailableCultureInfo = {};
+
+Date.AvailableCultureInfo["uz-Latn-UZ"] = {
 	/* Culture Name */
     name: "uz-Latn-UZ",
     englishName: "Uzbek (Latin, Uzbekistan)",
@@ -193,3 +196,5 @@ Date.CultureInfo = {
  * long                long
  * short               short
  */
+if ( !Date.CultureInfo )
+    Date.CultureInfo = Date.AvailableCultureInfo["uz-Latn-UZ"];

@@ -14,7 +14,7 @@
  */
  
 (function () {
-    var $D = Date, $P = $D.prototype, $C = $D.CultureInfo, $N = Number.prototype;
+    var $D = Date, $P = $D.prototype, $N = Number.prototype;
 
     // private
     $P._orient = +1;
@@ -347,6 +347,7 @@
     
     var sdf = function (n) {
         return function () {
+            var $C = Date.getCultureInfo();
             var t = $D.today(), shift = n - t.getDay();
             if (n === 0 && $C.firstDayOfWeek === 1 && t.getDay() !== 0) {
                 shift = shift + 7;

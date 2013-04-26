@@ -1,4 +1,7 @@
-Date.CultureInfo = {
+if ( !Date.AvailableCultureInfo )
+        Date.AvailableCultureInfo = {};
+
+Date.AvailableCultureInfo["sr-Cyrl-BA"] = {
 	/* Culture Name */
     name: "sr-Cyrl-BA",
     englishName: "Serbian (Cyrillic) (Bosnia and Herzegovina)",
@@ -193,3 +196,5 @@ Date.CultureInfo = {
  * long                long
  * short               short
  */
+if ( !Date.CultureInfo )
+    Date.CultureInfo = Date.AvailableCultureInfo["sr-Cyrl-BA"];

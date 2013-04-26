@@ -1,4 +1,7 @@
-Date.CultureInfo = {
+if ( !Date.AvailableCultureInfo )
+        Date.AvailableCultureInfo = {};
+
+Date.AvailableCultureInfo["az-Cyrl-AZ"] = {
 	/* Culture Name */
     name: "az-Cyrl-AZ",
     englishName: "Azeri (Cyrillic, Azerbaijan)",
@@ -193,3 +196,5 @@ Date.CultureInfo = {
  * long                long
  * short               short
  */
+if ( !Date.CultureInfo )
+    Date.CultureInfo = Date.AvailableCultureInfo["az-Cyrl-AZ"];

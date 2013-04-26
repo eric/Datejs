@@ -24,7 +24,8 @@ This isn't a comprehesive list, but it hopefully will hit the high points.
 * Remove conditions in `finish()` in `parser.js` that are not used by any tests
 * Fix a couple relative-ish cases like `15th at 3pm`
 * Added support for "biasing" toward dates in the past or the future
-
+* Added support for load multiple locale files
+* Added support for switch between locales (with Date.setLocale) and for single instance
 
 ## Biasing ##
 

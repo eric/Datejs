@@ -465,7 +465,7 @@
 }());
 
 (function () {
-    var $D = Date, $P = $D.prototype, $C = $D.CultureInfo;
+    var $D = Date, $P = $D.prototype;
 
     var flattenAndCompact = function (ax) { 
         var rx = []; 
@@ -536,6 +536,7 @@
             };
         },
         year: function (s) {
+            var $C = Date.getCultureInfo();
             return function () {
                 var n = Number(s);
                 this.year = ((s.length > 2) ? n : 
@@ -796,6 +797,7 @@
     var _C = {};
     g.ctoken = function (keys) {
         var fn = _C[keys];
+        var $C = Date.getCultureInfo();
         if (! fn) {
             var c = $C.regexPatterns;
             var kx = keys.split(/\s+/), px = []; 
@@ -807,6 +809,7 @@
         return fn;
     };
     g.ctoken2 = function (key) { 
+        var $C = Date.getCultureInfo();
         return _.rtoken($C.regexPatterns[key]);
     };
 
@@ -901,6 +904,7 @@
     g.ymd = _fn(g.ddd, g.year, g.month, g.day);
     g.dmy = _fn(g.ddd, g.day, g.month, g.year);
     g.date = function (s) { 
+        var $C = Date.getCultureInfo();
         return ((g[$C.dateElementOrder] || g.mdy).call(this, s));
     }; 
 

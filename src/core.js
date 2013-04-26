@@ -10,7 +10,6 @@
 (function () {
     var $D = Date,
             $P = $D.prototype,
-            $C = $D.CultureInfo,
             p = function (s, l) {
                 if (!l) {
                     l = 2;
@@ -84,6 +83,7 @@
      * @return {Number}  The day number
      */
     $D.getDayNumberFromName = function (name) {
+        var $C = this.getCultureInfo();
         var n = $C.dayNames, m = $C.abbreviatedDayNames, o = $C.shortestDayNames, s = name.toLowerCase();
         for (var i = 0; i < n.length; i++) {
             if (n[i].toLowerCase() == s || m[i].toLowerCase() == s || o[i].toLowerCase() == s) {
@@ -99,6 +99,7 @@
      * @return {Number}  The day number
      */
     $D.getMonthNumberFromName = function (name) {
+        var $C = this.getCultureInfo();
         var n = $C.monthNames, m = $C.abbreviatedMonthNames, s = name.toLowerCase();
         for (var i = 0; i < n.length; i++) {
             if (n[i].toLowerCase() == s || m[i].toLowerCase() == s) {
@@ -128,6 +129,7 @@
     };
 
     $D.getTimezoneAbbreviation = function (offset) {
+        var $C = this.getCultureInfo();
         var z = $C.timezones, p;
         for (var i = 0; i < z.length; i++) {
             if (z[i].offset === offset) {
@@ -138,6 +140,7 @@
     };
 
     $D.getTimezoneOffset = function (name) {
+        var $C = this.getCultureInfo();
         var z = $C.timezones, p;
         for (var i = 0; i < z.length; i++) {
             if (z[i].name === name.toUpperCase()) {
@@ -764,35 +767,41 @@
      * @param {String}   A format string consisting of one or more format spcifiers [Optional].
      * @return {String}  A string representation of the current Date object.
      */
-    $P.toString = function (format) {
+    $P.toString = function (format, options) {
         var x = this;
+        var $CI = this.cultureInfo;
+        if ( options instanceof Object && options.locale )
+        {
+            $CI = Date.AvailableCultureInfo[options.locale];
+        }
+        $CI = $CI || Date.getCultureInfo(); // Default to Date.CultureInfo
 
         // Standard Date and Time Format Strings. Formats pulled from CultureInfo file and
         // may vary by culture. 
         if (format && format.length == 1) {
-            var c = $C.formatPatterns;
+            var c = $CI.formatPatterns;
             x.t = x.toString;
             switch (format) {
                 case "d":
-                    return x.t(c.shortDate);
+                    return x.t(c.shortDate, options);
                 case "D":
-                    return x.t(c.longDate);
+                    return x.t(c.longDate, options);
                 case "F":
-                    return x.t(c.fullDateTime);
+                    return x.t(c.fullDateTime, options);
                 case "m":
-                    return x.t(c.monthDay);
+                    return x.t(c.monthDay, options);
                 case "r":
-                    return x.t(c.rfc1123);
+                    return x.t(c.rfc1123, options);
                 case "s":
-                    return x.t(c.sortableDateTime);
+                    return x.t(c.sortableDateTime, options);
                 case "t":
-                    return x.t(c.shortTime);
+                    return x.t(c.shortTime, options);
                 case "T":
-                    return x.t(c.longTime);
+                    return x.t(c.longTime, options);
                 case "u":
-                    return x.t(c.universalSortableDateTime);
+                    return x.t(c.universalSortableDateTime, options);
                 case "y":
-                    return x.t(c.yearMonth);
+                    return x.t(c.yearMonth, options);
             }
         }
 
@@ -841,25 +850,25 @@
                         case "yy":
                             return p(x.getFullYear());
                         case "dddd":
-                            return $C.dayNames[x.getDay()];
+                            return $CI.dayNames[x.getDay()];
                         case "ddd":
-                            return $C.abbreviatedDayNames[x.getDay()];
+                            return $CI.abbreviatedDayNames[x.getDay()];
                         case "dd":
                             return p(x.getDate());
                         case "d":
                             return x.getDate();
                         case "MMMM":
-                            return $C.monthNames[x.getMonth()];
+                            return $CI.monthNames[x.getMonth()];
                         case "MMM":
-                            return $C.abbreviatedMonthNames[x.getMonth()];
+                            return $CI.abbreviatedMonthNames[x.getMonth()];
                         case "MM":
                             return p((x.getMonth() + 1));
                         case "M":
                             return x.getMonth() + 1;
                         case "t":
-                            return x.h() < 12 ? $C.amDesignator.substring(0, 1) : $C.pmDesignator.substring(0, 1);
+                            return x.h() < 12 ? $CI.amDesignator.substring(0, 1) : $CI.pmDesignator.substring(0, 1);
                         case "tt":
-                            return x.h() < 12 ? $C.amDesignator : $C.pmDesignator;
+                            return x.h() < 12 ? $CI.amDesignator : $CI.pmDesignator;
                         case "S":
                             return ord(x.getDate());
                         default:
@@ -867,5 +876,35 @@
                     }
                 }
         ) : this._toString();
+    };
+
+    $P.getCultureInfo = function() {
+        return this.cultureInfo || $D.CultureInfo;
+    };
+
+    $P.setLocale = function(cultureInfo) {
+        if ( cultureInfo instanceof Object )
+            this.cultureInfo = cultureInfo;
+        else if ( Date.AvailableCultureInfo && Date.AvailableCultureInfo[cultureInfo] )
+            this.cultureInfo = Date.AvailableCultureInfo[cultureInfo];
+        else
+            throw "Unknow locale";
+    };
+
+    $D.setLocale = function(cultureInfo) {
+        if ( cultureInfo instanceof Object )
+        {
+            $D.CultureInfo = cultureInfo;
+        }
+        else if ( Date.AvailableCultureInfo && Date.AvailableCultureInfo[cultureInfo] )
+        {
+            $D.CultureInfo = Date.AvailableCultureInfo[cultureInfo];
+        }
+        else
+            throw "Unknow locale";
+    };
+
+    $D.getCultureInfo = function() {
+        return this.CultureInfo;
     };
 }());

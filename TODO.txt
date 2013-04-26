@@ -13,6 +13,9 @@ TODO
 	
 3.	More tests!
 
+4.	Test for changing locale at runtime
+
+5.	Test for multiple locale file loading
 
 
 CUTTING ROOM FLOOR
